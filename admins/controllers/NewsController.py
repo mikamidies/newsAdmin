@@ -10,7 +10,7 @@ news_router = BaseRouter("news")
 view_service = ModelViewService(model=News, search_fields=["title"])
 action_service = ModelActionService(model=News, view_service=view_service,
                                  template_name="admin/news/form.html",
-                                 redirect_to="/admin/news")
+                                 redirect_to="/admin/news", image_fields=["image"])
 
 
 @news_router.GET_request("/", name="news_list")
@@ -24,6 +24,7 @@ def list_view(request: HttpRequest):
 def create_get(request: HttpRequest):
     instance = News()
     context = view_service.get_one_context_data(request, instance)
+    action_service.predelete_image(request)
     return render(request, "admin/news/form.html", context=context)
 
 
@@ -38,6 +39,7 @@ def create_post(request: HttpRequest):
 def edit_get(request: HttpRequest, pk: int):
     instance = view_service.get_one(pk)
     context = view_service.get_one_context_data(request, instance)
+    action_service.predelete_image(request, str(pk))
     return render(request, "admin/news/form.html", context=context)
 
 

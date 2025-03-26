@@ -60,22 +60,57 @@
                     <th scope="col">Топ</th>
                     <th scope="col">Дата создания</th>
                     <th scope="col">Теги</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                {% for item in items %}
+                {% for obj, i in objects.pairs %}
                 <tr>
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.title.ru }}</td>
                     <td>
-                        <div class="btn-group">
-                            <a href="{% url 'news_edit' item.id %}" class="btn btn-sm btn-outline-secondary">
-                                Редактировать
-                            </a>
-                            <form action="{% url 'news_delete' item.id %}" method="POST" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline-danger"
-                                    onclick="return confirm('Вы уверены?')">Удалить</button>
+                        <a class="item-title" href="{% url 'news_edit' obj.id %}">{{ i }}</a>
+                    </td>
+                    <td>
+                        <p class="item-phone text-reset">
+                            {{ obj.title|get_item:lang.code }}
+                        </p>
+                    </td>
+                    <td>
+                        <div class="avatar avatar-xl align-middle me-2">
+                            {% if obj.image %}
+                            <img class="avatar-img" style="object-fit: contain;" 
+                                src='{% image_thumb obj.image alias="ten" request=request %}'
+                                alt="...">
+                            {% else %}
+                            <img class="avatar-img" src="{% static 'src/img/default.png' %}" alt="...">
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        {% if obj.top %}
+                        <span class="badge bg-success-soft">Top</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <p class="item-phone text-reset">
+                            {{ obj.created_at|date:"Y-m-d" }}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="item-phone text-reset">
+                            {{ obj.tags|get_item:lang.code }}
+                        </p>
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-end">
+                            <a href="{% url 'news_edit' obj.id %}" class="btn btn-sm btn-info"><i
+                                    class="fe fe-edit-2"></i></a>
+                            <a class="btn btn-sm btn-danger ms-3"
+                                onclick="var result = confirm('Want to delete?');if (result){form_submit_in_table('delete-form{{ obj.id }}')}"><i
+                                    class="fe fe-trash"></i></a>
+                            <form action="{% url 'news_delete' obj.id %}" 
+                                id="delete-form{{ obj.id }}" method="POST"
+                                style="display: none;">
+                                {% csrf_token %} 
                             </form>
                         </div>
                     </td>

@@ -168,7 +168,7 @@ INTERNAL_IPS = [
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'C:/Users/User/Documents/admin.b-tex.eu-master/cache',  # Абсолютный путь
     }
 }

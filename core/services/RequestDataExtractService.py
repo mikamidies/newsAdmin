@@ -84,7 +84,7 @@ class RequestDataExtractService:
                     id=int(value)).first()
 
             elif isinstance(field, models.BooleanField):
-                request_data[field.name] = value is not None
+                request_data[field.name] = value == "on"
 
             elif isinstance(field, ThumbnailerImageField):
                 image = self.get_image(request, field.name, id)

@@ -55,14 +55,22 @@ class Application(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 class News(models.Model):
-    category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="news")
     title = models.JSONField(validators=[json_field_validate])
+    subtitle = models.JSONField(blank=True, null=True)
     text = models.JSONField(blank=True, null=True)
+    tags = models.JSONField(blank=True, null=True)
+    image = ThumbnailerImageField(blank=True, null=True)
     top = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)  
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if self.pk:  # Если запись уже существует (обновление)
+            old_instance = News.objects.filter(pk=self.pk).first()
+            if old_instance:
+                self.created_at = old_instance.created_at  # Сохранение старого значения
+        super().save(*args, **kwargs)
 
 class VideoNews(models.Model):
     title = models.JSONField(validators=[json_field_validate])
@@ -88,3 +96,4 @@ class Book(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)  
     updated_at = models.DateTimeField(auto_now=True)
+    book = models.FileField()

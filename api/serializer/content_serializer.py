@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from core.serializers import BaseModelSerializer, ThumbnailSerializer
-from api.models import Category, Product, Banner, Media, Slider, Application
+from api.models import Category, Product, Banner, Media, Slider, Application, News
 
 
 class ProductSerializer(BaseModelSerializer):
@@ -56,3 +56,10 @@ class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         exclude = ["status"]
+
+class NewsSerializer(BaseModelSerializer):
+    image = ThumbnailSerializer(alias="1100x1100")
+
+    class Meta:
+        model = News
+        fields = "__all__"

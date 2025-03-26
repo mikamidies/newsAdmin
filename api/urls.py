@@ -9,5 +9,6 @@ urlpatterns = [
     path("banners", views.BannerList.as_view()),
     path("media", views.MediaList.as_view()),
     path("sliders", views.SliderList.as_view()),
-    path("application/create", views.ApplicationView.as_view())
+    path("application/create", views.ApplicationView.as_view()),
+    path("news", views.NewsList.as_view()),
 ]

@@ -97,13 +97,13 @@
                             </label>
                             <br>
                             <!-- Input -->
-                            <input type="text" name="title#{{ lang.code }}" class="form-control"
-                            value="{% field_value field='title' lang=lang %}"
+                            <input type="text" name="subtitle#{{ lang.code }}" class="form-control"
+                            value="{% field_value field='subtitle' lang=lang %}"
                             {% if lang.default %} {% endif %}>
                             {% if lang.default %}
                             <div class="invalid-feedback" style="display: block;">
-                                {% if errors.title %}
-                                {{ errors.title|list_item:0 }}
+                                {% if errors.subtitle %}
+                                {{ errors.subtitle|list_item:0 }}
                                 {% endif %}
                             </div>
                             {% endif %}
@@ -117,10 +117,33 @@
                               <br>
                               <!-- Textarea -->
                               <textarea class="editor" 
-                                  name="description#{{ lang.code }}" placeholder="Text">
-                                  {% field_value field='description' lang=lang %}
+                                  name="text{{ lang.code }}" placeholder="Text">
+                                  {% field_value field='text' lang=lang %}
                               </textarea>
                           </div>
+
+                          <div class="form-group">
+                            <!-- Label  -->
+                            <label {% if lang.default %} 
+                                class="form-label" 
+                                {% else %} 
+                                class="form-label" 
+                                {% endif %}>
+                                Теги
+                            </label>
+                            <br>
+                            <!-- Input -->
+                            <input type="text" name="tags#{{ lang.code }}" class="form-control"
+                            value="{% field_value field='tags' lang=lang %}"
+                            {% if lang.default %} {% endif %}>
+                            {% if lang.default %}
+                            <div class="invalid-feedback" style="display: block;">
+                                {% if errors.tags %}
+                                {{ errors.tags|list_item:0 }}
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
                       </div>
                   {% endfor %}
               </div>
@@ -131,27 +154,6 @@
   <div class="col-12 col-xl-4">
       <div class="card mt-3">
           <div class="card-body p-4">
-               <div class="form-group">
-                      <label class="form-label mb-1">
-                          Теги
-                      </label>
-                          
-                      <select name="category" class="form-select">
-                          <option value="">-----</option>
-                          {% for category in relateds %}
-                              {% if object and category.id == object.category.id %}
-                                  <option value="{{ category.id }}" 
-                              selected>{{ category.title|get_item:lang.code }}</option>
-                              {% else%}
-                                  <option value="{{ category.id }}"
-                                      >{{ category.title|get_item:lang.code }}</option>
-                              {% endif %}
-                          {% endfor %}
-                      </select> 
-                  </div>
-
-
-              <!-- Project cover -->
               <div class="form-group mb-0">
 
                   <!-- Label  -->
@@ -237,9 +239,9 @@
               <div class="row">
                   <div class="col-12 col-xl-2 d-flex align-items-center ">
                       <div class="form-check form-switch me-4">
-                        <input type="checkbox" name="active" class="form-check-input" 
-                                id="id_active" 
-                                {% if object.active or not object %} checked {% endif %}>
+                        <input type="checkbox" name="top" class="form-check-input" 
+                                id="id_top" 
+                                {% if object.top or not object %} checked {% endif %}>
                         <label class="form-check-label" for="flexSwitchCheckDefault">Топ</label>
                       </div>
                       <div class="form-check form-switch">
