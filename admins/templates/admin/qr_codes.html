@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        img {
+            width: 152px;
+            height: 152px;
+        }
+
+        @page {
+            size: letter portrait;
+            @frame content_frame {
+                left: 20pt;
+                width: 512pt;
+                top: 5pt;
+                height: 730pt;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <table>
+        {% for qr_codes_list in qr_codes  %}
+        <tr>
+            <td>
+                {% for qr in qr_codes_list %}
+                    <img src="{{ base_url }}/{{qr.qr_code.url}}" alt="">
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

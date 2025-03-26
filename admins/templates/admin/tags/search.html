@@ -1,0 +1,21 @@
+<div class="card-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <!-- Form -->
+            <form method="get">
+                <div class="d-flex">
+                    <div class="input-group input-group-flush input-group-merge input-group-reverse"
+                        style="width: 200px;">
+                        <input class="form-control" name="q" type="search" placeholder="Search"
+                        {% if request.GET.q %} value="{{ request.GET.q }}" {% endif %}>
+                        <span class="input-group-text">
+                            <i class="fe fe-search"></i>
+                        </span>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Искать</button>
+                </div>
+            </form>
+
+        </div>
+    </div> <!-- / .row -->
+</div>

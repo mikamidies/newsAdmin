@@ -1,0 +1,91 @@
+{% extends 'admin/base_template.html' %}
+{% load static %}
+{% load get_item %}
+{% load cut_text %}
+{% load image_thumb %}
+
+{% block title %} Новости {% endblock %}
+{% block page_title %} Новости {% endblock %}
+
+{% block page_btn %}
+<div class="col-auto">
+    <a href="{% url 'news_create' %}" class="btn btn-primary ms-2">
+        Добавить
+    </a>
+</div>
+{% endblock %}
+
+{% block nav_ol %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Главная</a></li>
+    <li class="breadcrumb-item active" aria-current="&quot;page&quot;">
+      Новости
+    </li>
+</ol>
+{% endblock %}
+
+{% block content_width %} class="col-12" {% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <!-- Form -->
+            <form method="get">
+                <div class="d-flex">
+                    <div class="input-group input-group-flush input-group-merge input-group-reverse"
+                        style="width: 200px;">
+                        <input class="form-control" name="q" type="search" placeholder="Search"
+                        {% if request.GET.q %} value="{{ request.GET.q }}" {% endif %}>
+                        <span class="input-group-text">
+                            <i class="fe fe-search"></i>
+                        </span>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Искать</button>
+                </div>
+            </form>
+
+        </div>
+    </div> <!-- / .row -->
+  </div>
+
+    <div class="table-responsive" style="padding: 20px;">
+        <table class="table table-sm table-hover table-nowrap card-table">
+            <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col">Заголовок</th>
+                    <th scope="col">Изображение</th>
+                    <th scope="col">Топ</th>
+                    <th scope="col">Дата создания</th>
+                    <th scope="col">Теги</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.title.ru }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'news_edit' item.id %}" class="btn btn-sm btn-outline-secondary">
+                                Редактировать
+                            </a>
+                            <form action="{% url 'news_delete' item.id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('Вы уверены?')">Удалить</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      {% include "../tags/pagination.html" %}
+    </div>
+</div>
+{% endblock %}
