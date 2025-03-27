@@ -57,10 +57,10 @@ class ApplicationSerializer(serializers.ModelSerializer):
         exclude = ["status"]
 
 class NewsSerializer(serializers.ModelSerializer):
-    image = ThumbnailSerializer(alias="1100x1100")  # Меняем на ThumbnailSerializer как у других моделей
+    image = ThumbnailSerializer(alias="1100x1100")
 
     class Meta:
-        model = Books
+        model = News
         fields = "__all__"
 
 class VideosSerializer(BaseModelSerializer):
@@ -74,7 +74,7 @@ class AudiosSerializer(BaseModelSerializer):
         fields = "__all__"
 
 class BooksSerializer(BaseModelSerializer):
-    image = ThumbnailSerializer(alias="1100x1100")  # Меняем на ThumbnailSerializer как у других моделей
+    image = ThumbnailSerializer(alias="1100x1100")  
 
     class Meta:
         model = Books
