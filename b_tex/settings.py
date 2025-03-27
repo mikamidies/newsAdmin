@@ -122,8 +122,9 @@ THUMBNAIL_EXTENSION = "webp"
 THUMBNAIL_TRANSPARENCY_EXTENSION = "webp"
 
 
-LOGIN_REDIRECT_URL = "/admin/applications"
+LOGIN_REDIRECT_URL = "/admin/news"
 LOGOUT_REDIRECT_URL = "/admin/login"
+DEFAULT_PAGE_URL = '/admin/news/'
 
 
 REST_FRAMEWORK = {
