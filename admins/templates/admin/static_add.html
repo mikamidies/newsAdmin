@@ -84,16 +84,16 @@
                             <div class="form-group">
                                 <!-- Label  -->
                                 <label class="form-label">
-                                    Подзаголовок
+                                    Ключевые слова
                                 </label>
                                 <br>
                                 <!-- Input -->
-                                <input type="text" name="subtitle#{{ lang.code }}" 
+                                <textarea type="text" name="subtitle#{{ lang.code }}" 
                                 {% if object.subtitle and object.subtitle|get_item:lang.code %} 
                                     value="{{ object.subtitle|get_item:lang.code }}" 
                                 {% elif request_post and request_post|get_item:'subtitle' %} 
                                     value="{{ request_post|get_item:'subtitle'|get_item:lang.code }}"     
-                                {% endif %} class="form-control">
+                                {% endif %} class="form-control">{% if object.subtitle and object.subtitle|get_item:lang.code %}{{ object.subtitle|get_item:lang.code}}{% elif request_post and request_post|get_item:'subtitle' %}{{ request_post|get_item:'subtitle'|get_item:lang.code }}{% endif %}</textarea>
                             
                             </div>
 
@@ -106,32 +106,9 @@
                                 </label>
                                 <br>
                                 <!-- Textarea -->
-                                <textarea class="editor" name="description#{{ lang.code }}" placeholder="Text">{% if object.description and object.description|get_item:lang.code %}{{ object.description|get_item:lang.code}}{% elif request_post and request_post|get_item:'description' %}{{ request_post|get_item:'description'|get_item:lang.code }}{% endif %}</textarea>
+                                <textarea class="form-control" name="description#{{ lang.code }}" placeholder="Text">{% if object.description and object.description|get_item:lang.code %}{{ object.description|get_item:lang.code}}{% elif request_post and request_post|get_item:'description' %}{{ request_post|get_item:'description'|get_item:lang.code }}{% endif %}</textarea>
                             </div>
 
-                            <!-- Project description -->
-                            <div class="form-group">
-                            
-                                <!-- Label -->
-                                <label class="form-label mb-1">
-                                    Адрес
-                                </label>
-                                <br>
-                                <!-- Textarea -->
-                                <textarea name="adres#{{ lang.code }}"  class="form-control" placeholder="Адрес">{% if object.adres and object.adres|get_item:lang.code %}{{ object.adres|get_item:lang.code }} {% elif request_post and request_post|get_item:'adres' %}{{ request_post|get_item:'adres'|get_item:lang.code }}{% endif %}</textarea>
-                            </div>
-
-                            <!-- Project description -->
-                            <div class="form-group">
-                            
-                                <!-- Label -->
-                                <label class="form-label mb-1">
-                                    Время работы
-                                </label>
-                                <br>
-                                <!-- Textarea -->
-                                <textarea class="form-control" name="work_time#{{ lang.code }}" placeholder="HH:MM - HH:MM">{% if object.work_time and object.work_time|get_item:lang.code %}{{ object.work_time|get_item:lang.code }} {% elif request_post and request_post|get_item:'work_time' %}{{ request_post|get_item:'work_time'|get_item:lang.code }}{% endif %}</textarea>
-                            </div>
                         </div>
                     {% endfor %}
                     <!-- Project description -->
@@ -208,21 +185,10 @@
                     <!-- Input -->
                     <input type="url" {% if object.youtube %} value="{{ object.youtube }}" {% endif %} name="youtube" class="form-control" placeholder="Youtube url">
                 </div>
-                <!-- Project description -->
-                <div class="form-group">
-                
-                    <!-- Label -->
-                    <label class="form-label mb-1">
-                        Втсавить карту(iframe)
-                    </label>
-                    <br>
-                    <!-- Textarea -->
-                    <textarea class="form-control" name="map" placeholder="Адрес">{% if object.map %} {{ object.map }} {% endif %}</textarea>
-                </div>
 
                 <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
+                    <div class="col-12">
+                        <div class="form-group mb-0">
                             <!-- Dropzone -->
                             <label for="dropzone" class="form-label">Лого</label>
                             <!-- Dropzone -->
@@ -255,46 +221,6 @@
                                             <input type="hidden" name="key" value="logo1">
                                         </div>
                                     </div>
-                                    {% endif %}
-                                </div>
-                            
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <!-- Dropzone -->
-                            <label for="dropzone" class="form-label">Favicon</label>
-                            <div class="dropzone dropzone-multiple border-0" data-max="1" data-delete="/admin/delete_static_image" data-url="/admin/add_static_image" data-key="logo2"
-                                data-url="/admin/images/save">
-                                <!-- Fallback -->
-                                <div class="dz-preview d-none"></div>
-                                <div class="fallback">
-                                    <div class="custom-file">
-                                        <input type="file" name="file" class="form-control" id="customFileUploadMultiple">
-                                        <label class="form-label" for="customFileUploadMultiple">Choose file</label>
-                                    </div>
-                                </div>
-                            
-                                <!-- Preview -->
-                                <div class="dz-preview-container" id="logo2" style="padding: 0;">
-                                    {% if object.logo_second %}
-                                        <div class="dz-preview dz-processing dz-complete dz-image-preview" style="position: relative;">
-                                            <div class="dz-image">
-                                                <img data-dz-thumbnail="" src='{% image_thumb object.logo_second alias="ten" request=request %}' alt="{{ object.logo_second }}">
-                                            </div>
-                                            <div class="dz-details">
-                                                <div class="dz-filename"><span data-dz-name="">{{ object.icon }}</span></div>
-                                            </div>
-                                            <a class="dz-remove" data-file="{{ img.id }}"
-                                                onclick="var result = confirm('Want to delete?');if (result){submit_form('delete-form-logo_sec')}"
-                                                data-dz-remove>Удалить</a>
-                                            <div action="{% url 'del_static_image' %}" id="delete-form-logo_sec" method="post">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="url" value="{{ request.get_full_path }}">
-                                                <input type="hidden" name="key" value="logo2">
-                                            </div>
-                                        </div>
                                     {% endif %}
                                 </div>
                             

@@ -14,4 +14,5 @@ urlpatterns = [
     path("videos", views.VideosListView.as_view()),
     path("audios", views.AudiosListView.as_view()),
     path("books", views.BooksListView.as_view()),
+    path('static/', views.StaticInformationView.as_view(), name='api-static'),
 ]

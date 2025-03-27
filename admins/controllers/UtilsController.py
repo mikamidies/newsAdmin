@@ -2,13 +2,14 @@ from django.db import transaction
 from django.apps import apps
 import time
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from datetime import datetime
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.contrib.auth import logout
-
+from admins.models import StaticInformation
+from core.models import Languages
 
 # delete model item
 def delete_item(request):
@@ -119,3 +120,45 @@ def logout_view(request):
 
 def home_view(request):
     return redirect("/admin/applications")
+
+def static_info(request):
+    """Отображение и редактирование общих настроек сайта"""
+    instance = StaticInformation.objects.first()
+    languages = Languages.objects.filter(active=True).order_by('-default')
+    
+    if request.method == 'POST':
+        if not instance:
+            instance = StaticInformation()
+            
+        # Обработка JSON полей с динамическими языками
+        json_fields = ['title', 'subtitle', 'description', 'about_us', 'adres', 'work_time']
+        for field in json_fields:
+            data = {}
+            for lang in languages:
+                value = request.POST.get(f'{field}#{lang.code}')
+                if value:
+                    data[lang.code] = value
+            setattr(instance, field, data)
+        
+        # Обработка обычных полей
+        fields = ['email', 'telegram', 'instagram', 'facebook', 
+                 'youtube', 'nbm', 'map', 'video_url']
+        for field in fields:
+            value = request.POST.get(field)
+            setattr(instance, field, value)
+            
+        # Обработка файлов
+        if 'logo_first' in request.FILES:
+            instance.logo_first = request.FILES['logo_first']
+        if 'logo_second' in request.FILES:
+            instance.logo_second = request.FILES['logo_second']
+            
+        instance.save()
+        messages.success(request, 'Данные успешно сохранены')
+        return redirect('static_info')
+    
+    context = {
+        'object': instance,
+        'langs': languages,
+    }
+    return render(request, 'admin/static_add.html', context)

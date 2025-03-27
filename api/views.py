@@ -11,9 +11,54 @@ from api.serializer import (
     NewsSerializer, VideosSerializer, AudiosSerializer, BooksSerializer
 )
 from rest_framework import response, views, generics
+from rest_framework.response import Response  # Add this import
 from api.models import Category, Banner, Media, Slider, Application, News, Videos, Audios, Books
 from core.pagination import BasePagination
+from rest_framework.generics import RetrieveAPIView
+from admins.models import StaticInformation
+from core.models import Languages
 
+class StaticInformationView(RetrieveAPIView):
+    """API endpoint для получения общих настроек сайта на конкретном языке"""
+    
+    def get_object(self):
+        return StaticInformation.objects.first()
+
+    def get_language_code(self):
+        """Получаем код языка из заголовка"""
+        default_lang = Languages.objects.filter(default=True).first()
+        default_code = default_lang.code if default_lang else 'ru'
+        
+        lang_code = self.request.headers.get('Accept-Language', default_code).lower()
+        language = Languages.objects.filter(code__iexact=lang_code, active=True).first()
+        
+        return language.code if language else default_code
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if not instance:
+            return Response({})
+
+        lang_code = self.get_language_code()
+        
+        response_data = {
+            "id": instance.id,
+            "logo_first": instance.logo_first.url if instance.logo_first else None,
+            "title": instance.title.get(lang_code, ""),
+            "subtitle": instance.subtitle.get(lang_code, ""),
+            "description": instance.description.get(lang_code, ""),
+            "about_us": instance.about_us.get(lang_code, ""),
+            "adres": instance.adres.get(lang_code, ""),
+            "email": instance.email or "",
+            "telegram": instance.telegram or "",
+            "instagram": instance.instagram or "",
+            "facebook": instance.facebook or "",
+            "youtube": instance.youtube or "",
+            "nbm": instance.nbm or "",
+            "video_url": instance.video_url or ""
+        }
+        
+        return Response(response_data)
 
 # static information
 class StaticInfView(views.APIView):

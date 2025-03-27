@@ -29,7 +29,7 @@ urlpatterns = [
     path("admins/<int:pk>/edit",
          AdminController.AdminUpdate.as_view(), name='admins_edit'),
     path('logout', UtilsController.logout_view, name='logout_url'),
-
+    path('static-info/', UtilsController.static_info, name='static_info'),
 
     # langs
     path('langs', LangsController.LangsList.as_view(), name='langs_list'),

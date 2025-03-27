@@ -193,6 +193,13 @@
                             <div class="collapse" id="settingsPages">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
+                                        <a href="{% url 'static_info' %}" class="nav-link" role="button"
+                                            aria-expanded="false" aria-controls="sidebarAccount">
+                                            Общие настройки
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
                                         <a href="{% url 'langs_list' %}" class="nav-link" role="button"
                                             aria-expanded="false" aria-controls="sidebarAccount">
                                             Языки
@@ -200,7 +207,6 @@
                                     </li>
 
                                     <li class="nav-item">
-
                                         <a href="{% url 'translation_list' %}" class="nav-link" role="button"
                                             aria-expanded="false" aria-controls="sidebarAccount">
                                             Переводы
