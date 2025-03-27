@@ -17,6 +17,7 @@ from core.pagination import BasePagination
 from rest_framework.generics import RetrieveAPIView
 from admins.models import StaticInformation
 from core.models import Languages
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class StaticInformationView(RetrieveAPIView):
     """API endpoint для получения общих настроек сайта на конкретном языке"""
@@ -109,9 +110,16 @@ class ApplicationView(generics.CreateAPIView):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
 
-class NewsList(generics.ListAPIView):
+class NewsList(generics.ListCreateAPIView):
     queryset = News.objects.filter(active=True).order_by("-id")
     serializer_class = NewsSerializer
+    parser_classes = (MultiPartParser, FormParser)
+
+    def perform_create(self, serializer):
+        if 'image' in self.request.FILES:
+            serializer.save(image=self.request.FILES['image'])
+        else:
+            serializer.save()
 
 class VideosListView(generics.ListAPIView):
     queryset = Videos.objects.filter(active=True)
@@ -121,6 +129,13 @@ class AudiosListView(generics.ListAPIView):
     queryset = Audios.objects.filter(active=True)
     serializer_class = AudiosSerializer
 
-class BooksListView(generics.ListAPIView):
+class BooksListView(generics.ListCreateAPIView):
     queryset = Books.objects.filter(active=True)
     serializer_class = BooksSerializer
+    parser_classes = (MultiPartParser, FormParser)
+
+    def perform_create(self, serializer):
+        if 'image' in self.request.FILES:
+            serializer.save(image=self.request.FILES['image'])
+        else:
+            serializer.save()

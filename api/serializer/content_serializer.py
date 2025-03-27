@@ -2,7 +2,6 @@ from rest_framework import serializers
 from core.serializers import BaseModelSerializer, ThumbnailSerializer
 from api.models import Category, Product, Banner, Media, Slider, Application, News, Videos, Audios, Books
 
-
 class ProductSerializer(BaseModelSerializer):
     image = ThumbnailSerializer(alias="900x900")
 
@@ -57,11 +56,11 @@ class ApplicationSerializer(serializers.ModelSerializer):
         model = Application
         exclude = ["status"]
 
-class NewsSerializer(BaseModelSerializer):
-    image = ThumbnailSerializer(alias="1100x1100")
+class NewsSerializer(serializers.ModelSerializer):
+    image = ThumbnailSerializer(alias="1100x1100")  # Меняем на ThumbnailSerializer как у других моделей
 
     class Meta:
-        model = News
+        model = Books
         fields = "__all__"
 
 class VideosSerializer(BaseModelSerializer):
@@ -75,7 +74,7 @@ class AudiosSerializer(BaseModelSerializer):
         fields = "__all__"
 
 class BooksSerializer(BaseModelSerializer):
-    image = ThumbnailSerializer(alias="1100x1100")
+    image = ThumbnailSerializer(alias="1100x1100")  # Меняем на ThumbnailSerializer как у других моделей
 
     class Meta:
         model = Books

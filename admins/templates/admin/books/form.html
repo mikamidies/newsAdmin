@@ -76,45 +76,21 @@
   <div class="col-12 col-xl-4">
       <div class="card">
           <div class="card-body p-4">
-              <div class="form-group mb-0">
-                  <label class="form-label">Изображение</label>
-                  
-                  <div class="dropzone dropzone-multiple border-0" 
-                       data-max="1" 
-                       data-delete="/admin/images/delete" 
-                       data-url="/admin/images/save" 
-                       data-key="{{ dropzone_key }}_image">
-                      
-                      <div class="dz-preview d-none"></div>
-                      <div class="fallback">
-                          <div class="custom-file">
-                              <input type="file" name="file" class="form-control" id="customFileUploadMultiple">
-                              <label class="form-label" for="customFileUploadMultiple">Choose file</label>
-                          </div>
-                      </div>
-
-                      <div class="dz-preview-container" id="book-image" style="padding: 0;">
-                          {% if object and object.image %}
-                          <div class="dz-preview dz-processing dz-complete dz-image-preview" style="position: relative;">
-                              <div class="dz-image">
-                                  <img data-dz-thumbnail="" src='{% image_thumb object.image alias="ten" request=request %}' alt="{{ object.image }}">
-                              </div>
-                              <div class="dz-details">
-                                  <div class="dz-filename"><span data-dz-name="">{{ object.image }}</span></div>
-                              </div>
-                              <a class="dz-remove" onclick="var result = confirm('Want to delete?');if (result){submit_form('delete-form{{ object.id }}')}" data-dz-remove>Удалить</a>
-                              <div action="{% url 'delete_model_field' %}" id="delete-form{{ object.id }}" method="post">
-                                  {% csrf_token %}
-                                  <input type="hidden" name="obj_id" value="{{ object.id }}">
-                                  <input type="hidden" name="field" value="image">
-                                  <input type="hidden" name="model_name" value="Books">
-                                  <input type="hidden" name="app_name" value="api">
-                              </div>
-                          </div>
-                          {% endif %}
-                      </div>
-                  </div>
-              </div>
+            <div class="form-group mb-4">
+                <label class="form-label">Изображение</label>
+                <input type="file" 
+                       name="image" 
+                       class="form-control" 
+                       accept="image/*"
+                       {% if not object.image %}required{% endif %}>
+                {% if object and object.image %}
+                    <div class="mt-2">
+                        <img src='{% image_thumb object.image alias="ten" request=request %}' 
+                             alt="{{ object.image }}" 
+                             style="max-width: 200px;">
+                    </div>
+                {% endif %}
+            </div>
 
               <div class="form-group mb-4">
                   <label class="form-label required">Файл книги</label>
