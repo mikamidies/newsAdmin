@@ -8,10 +8,10 @@ from api.serializer import (
     SliderSerializer,
     CategoryWithProductSerializer,
     ApplicationSerializer, 
-    NewsSerializer
+    NewsSerializer, VideosSerializer, AudiosSerializer, BooksSerializer
 )
 from rest_framework import response, views, generics
-from api.models import Category, Banner, Media, Slider, Application, News
+from api.models import Category, Banner, Media, Slider, Application, News, Videos, Audios, Books
 from core.pagination import BasePagination
 
 
@@ -67,3 +67,15 @@ class ApplicationView(generics.CreateAPIView):
 class NewsList(generics.ListAPIView):
     queryset = News.objects.filter(active=True).order_by("-id")
     serializer_class = NewsSerializer
+
+class VideosListView(generics.ListAPIView):
+    queryset = Videos.objects.filter(active=True)
+    serializer_class = VideosSerializer
+
+class AudiosListView(generics.ListAPIView):
+    queryset = Audios.objects.filter(active=True)
+    serializer_class = AudiosSerializer
+
+class BooksListView(generics.ListAPIView):
+    queryset = Books.objects.filter(active=True)
+    serializer_class = BooksSerializer

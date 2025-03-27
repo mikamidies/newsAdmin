@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from core.serializers import BaseModelSerializer, ThumbnailSerializer
-from api.models import Category, Product, Banner, Media, Slider, Application, News
+from api.models import Category, Product, Banner, Media, Slider, Application, News, Videos, Audios, Books
 
 
 class ProductSerializer(BaseModelSerializer):
@@ -62,4 +62,21 @@ class NewsSerializer(BaseModelSerializer):
 
     class Meta:
         model = News
+        fields = "__all__"
+
+class VideosSerializer(BaseModelSerializer):
+    class Meta:
+        model = Videos
+        fields = "__all__"
+
+class AudiosSerializer(BaseModelSerializer):
+    class Meta:
+        model = Audios
+        fields = "__all__"
+
+class BooksSerializer(BaseModelSerializer):
+    image = ThumbnailSerializer(alias="1100x1100")
+
+    class Meta:
+        model = Books
         fields = "__all__"

@@ -1,0 +1,149 @@
+{% extends 'admin/base_template.html' %}
+{% load static %}
+{% load get_item %}
+{% load image_thumb %}
+
+{% block title %} Создать книгу {% endblock %}
+
+{% block page_title %} Создать книгу {% endblock %}
+
+{% block nav_ol %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Главная</a></li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'books_list' %}">Книги</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="&quot;page&quot;">
+        Создать
+    </li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<form method="post" class="row" enctype="multipart/form-data" action="">
+  {% csrf_token %}
+  <input type="hidden" name="dropzone-key" value="{{ dropzone_key }}">
+  <input type="hidden" name="id" id="id" value="{{ object.id }}">
+  <input type="hidden" name="url" value="{{ request.get_full_path }}">
+  <div class="col-12 col-xl-8">
+      <!-- ...existing language tabs code... -->
+      <div class="card p-5 bg-white">
+          <div class="tab-content" id="myTabContent">
+              {% for lang in langs %}
+              {% if lang == langs.first %}
+              <div class="tab-pane fade show active" id="{{ lang.code }}" role="tabpanel">
+              {% else %}
+              <div class="tab-pane fade" id="{{ lang.code }}" role="tabpanel">
+              {% endif %}
+                  <div class="form-group mb-4">
+                      <label {% if lang.default %}class="form-label required"{% else %}class="form-label"{% endif %}>
+                          Заголовок
+                      </label>
+                      <input type="text" name="title#{{ lang.code }}" class="form-control"
+                             value="{% field_value field='title' lang=lang %}"
+                             {% if lang.default %}required{% endif %}>
+                      {% if lang.default and errors.title %}
+                      <div class="invalid-feedback" style="display: block;">
+                          {{ errors.title|list_item:0 }}
+                      </div>
+                      {% endif %}
+                  </div>
+
+                  <div class="form-group mb-4">
+                      <label class="form-label">Подзаголовок</label>
+                      <input type="text" name="subtitle#{{ lang.code }}" class="form-control"
+                             value="{% field_value field='subtitle' lang=lang %}">
+                  </div>
+
+                  <div class="form-group mb-4">
+                      <label class="form-label">Описание</label>
+                      <textarea class="editor" name="text#{{ lang.code }}" placeholder="Text">
+                          {% field_value field='text' lang=lang %}
+                      </textarea>
+                  </div>
+
+                  <div class="form-group mb-4">
+                      <label class="form-label">Теги</label>
+                      <input type="text" name="tags#{{ lang.code }}" class="form-control"
+                             value="{% field_value field='tags' lang=lang %}">
+                  </div>
+              </div>
+              {% endfor %}
+          </div>
+      </div>
+  </div>
+
+  <div class="col-12 col-xl-4">
+      <div class="card">
+          <div class="card-body p-4">
+              <div class="form-group mb-0">
+                  <label class="form-label">Изображение</label>
+                  
+                  <div class="dropzone dropzone-multiple border-0" 
+                       data-max="1" 
+                       data-delete="/admin/images/delete" 
+                       data-url="/admin/images/save" 
+                       data-key="{{ dropzone_key }}_image">
+                      
+                      <div class="dz-preview d-none"></div>
+                      <div class="fallback">
+                          <div class="custom-file">
+                              <input type="file" name="file" class="form-control" id="customFileUploadMultiple">
+                              <label class="form-label" for="customFileUploadMultiple">Choose file</label>
+                          </div>
+                      </div>
+
+                      <div class="dz-preview-container" id="book-image" style="padding: 0;">
+                          {% if object and object.image %}
+                          <div class="dz-preview dz-processing dz-complete dz-image-preview" style="position: relative;">
+                              <div class="dz-image">
+                                  <img data-dz-thumbnail="" src='{% image_thumb object.image alias="ten" request=request %}' alt="{{ object.image }}">
+                              </div>
+                              <div class="dz-details">
+                                  <div class="dz-filename"><span data-dz-name="">{{ object.image }}</span></div>
+                              </div>
+                              <a class="dz-remove" onclick="var result = confirm('Want to delete?');if (result){submit_form('delete-form{{ object.id }}')}" data-dz-remove>Удалить</a>
+                              <div action="{% url 'delete_model_field' %}" id="delete-form{{ object.id }}" method="post">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="obj_id" value="{{ object.id }}">
+                                  <input type="hidden" name="field" value="image">
+                                  <input type="hidden" name="model_name" value="Books">
+                                  <input type="hidden" name="app_name" value="api">
+                              </div>
+                          </div>
+                          {% endif %}
+                      </div>
+                  </div>
+              </div>
+
+              <div class="form-group mb-4">
+                  <label class="form-label required">Файл книги</label>
+                  <input type="file" name="book" class="form-control" 
+                         accept=".pdf,.epub,.fb2,.doc,.docx,.txt"
+                         {% if not object.book %}required{% endif %}>
+                  {% if object.book %}
+                      <small class="text-muted">Текущий файл: {{ object.book.name }}</small>
+                  {% endif %}
+              </div>
+
+              <div class="form-check form-switch">
+                  <input type="checkbox" name="active" class="form-check-input" 
+                         id="id_active" 
+                         {% if object.active or not object %}checked{% endif %}>
+                  <label class="form-check-label" for="id_active">Active</label>
+              </div>
+              <br>
+
+              <div class="btn-box text-end">
+                  <a href="{% url 'books_list' %}" class="btn w-30 btn-secondary">
+                      Отменить
+                  </a>
+                  <input type="submit" class="btn w-40 btn-primary" value="Сохранить">
+              </div>
+          </div>
+      </div>
+  </div>
+</form>
+
+<script src="{% static 'assets/js/editor.js' %}"></script>
+{% endblock %}

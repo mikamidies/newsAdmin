@@ -72,28 +72,51 @@ class News(models.Model):
                 self.created_at = old_instance.created_at  # Сохранение старого значения
         super().save(*args, **kwargs)
 
-class VideoNews(models.Model):
+class Videos(models.Model):
     title = models.JSONField(validators=[json_field_validate])
+    subtitle = models.JSONField(blank=True, null=True)
     text = models.JSONField(blank=True, null=True)
-    top = models.BooleanField(default=False)
-    active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)  
-    updated_at = models.DateTimeField(auto_now=True)
+    tags = models.JSONField(blank=True, null=True)
     youtube_url = models.URLField()
-
-class AudioNews(models.Model):
-    title = models.JSONField(validators=[json_field_validate])
-    text = models.JSONField(blank=True, null=True)
-    top = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)  
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if self.pk:  # Если запись уже существует (обновление)
+            old_instance = Videos.objects.filter(pk=self.pk).first()
+            if old_instance:
+                self.created_at = old_instance.created_at  # Сохранение старого значения
+        super().save(*args, **kwargs)
+
+class Audios(models.Model):
+    title = models.JSONField(validators=[json_field_validate])
+    active = models.BooleanField(default=True)
     audio = models.FileField()
+    created_at = models.DateTimeField(auto_now_add=True)  
+    updated_at = models.DateTimeField(auto_now=True)
 
-class Book(models.Model):
+    def save(self, *args, **kwargs):
+        if self.pk:  # Если запись уже существует (обновление)
+            old_instance = Audios.objects.filter(pk=self.pk).first()
+            if old_instance:
+                self.created_at = old_instance.created_at  # Сохранение старого значения
+        super().save(*args, **kwargs)
+
+class Books(models.Model):
     title = models.JSONField(validators=[json_field_validate])
+    subtitle = models.JSONField(blank=True, null=True)
+    text = models.JSONField(blank=True, null=True)
     image = models.ImageField(blank=True, null=True)
+    tags = models.JSONField(blank=True, null=True)
+    book = models.FileField()
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)  
     updated_at = models.DateTimeField(auto_now=True)
-    book = models.FileField()
+
+    def save(self, *args, **kwargs):
+        if self.pk:  # Если запись уже существует (обновление)
+            old_instance = Books.objects.filter(pk=self.pk).first()
+            if old_instance:
+                self.created_at = old_instance.created_at  # Сохранение старого значения
+        super().save(*args, **kwargs)

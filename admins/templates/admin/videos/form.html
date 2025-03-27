@@ -1,0 +1,162 @@
+{% extends 'admin/base_template.html' %}
+{% load static %}
+{% load get_item %}
+
+{% block title %} Создать видео {% endblock %}
+
+{% block page_title %} Создать видео {% endblock %}
+
+{% block nav_ol %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Главная</a></li>
+    <li class="breadcrumb-item ">
+        <a href="{% url 'videos_list' %}">Видео</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="&quot;page&quot;">
+        Создать
+    </li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<form method="post" class="row" enctype="multipart/form-data" action="">
+  {% csrf_token %}
+  <input type="hidden" name="id" id="id" value="{{ object.id }}">
+  <input type="hidden" name="url" value="{{ request.get_full_path }}">
+  <div class="col-12 col-xl-8">
+      <div class="card mt-3">
+          <div class="crd-header p-4 pb-0">
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                  {% for lang in langs %}
+                  {% if lang == langs.first %}
+                  <li class="nav-item" role="presentation">
+                      <button class="nav-link px-3 py-2 active" id="tab_{{ lang.id }}" 
+                          data-bs-toggle="tab"
+                          data-bs-target="#{{ lang.code }}" type="button" role="tab" 
+                          aria-controls="{{ lang.code }}"
+                          aria-selected="true">{{ lang.name }}</button>
+                  </li>
+                  {% else %}
+                  <li class="nav-item" role="presentation">
+                      <button class="nav-link px-3 py-2" id="tab_{{ lang.id }}" data-bs-toggle="tab"
+                          data-bs-target="#{{ lang.code }}" type="button" role="tab" 
+                          aria-controls="{{ lang.code }}"
+                          aria-selected="false">{{ lang.name }}</button>
+                  </li>
+                  {% endif %}
+                  {% endfor %}
+              </ul>
+          </div>
+          <div class="card-bodyb p-5">
+              <div class="tab-content" id="myTabContent">
+                  {% for lang in langs %}
+                  {% if lang == langs.first %}
+                  <div class="tab-pane fade show active" id="{{ lang.code }}" 
+                      role="tabpanel"
+                      aria-labelledby="{{ lang.code }}">
+                      {% else %}
+                      <div class="tab-pane fade" id="{{ lang.code }}" 
+                          role="tabpanel" 
+                          aria-labelledby="{{ lang.code }}">
+                      {% endif %}
+
+                          <div class="form-group">
+                              <label {% if lang.default %} 
+                                  class="form-label required" 
+                                  {% else %} 
+                                  class="form-label" 
+                                  {% endif %}>
+                                  Заголовок
+                              </label>
+                              <br>
+                              <input type="text" name="title#{{ lang.code }}" class="form-control"
+                              value="{% field_value field='title' lang=lang %}"
+                              {% if lang.default %} required {% endif %}>
+                              {% if lang.default %}
+                              <div class="invalid-feedback" style="display: block;">
+                                  {% if errors.title %}
+                                  {{ errors.title|list_item:0 }}
+                                  {% endif %}
+                              </div>
+                              {% endif %}
+                          </div>
+
+                          <div class="form-group">
+                            <label {% if lang.default %} 
+                                class="form-label" 
+                                {% else %} 
+                                class="form-label" 
+                                {% endif %}>
+                                Подзаголовок
+                            </label>
+                            <br>
+                            <input type="text" name="subtitle#{{ lang.code }}" class="form-control"
+                            value="{% field_value field='subtitle' lang=lang %}">
+                          </div>
+
+                          <div class="form-group">
+                              <label class="form-label mb-1">
+                                  Текст
+                              </label>
+                              <br>
+                              <textarea class="editor" 
+                                  name="text{{ lang.code }}" placeholder="Text">
+                                  {% field_value field='text' lang=lang %}
+                              </textarea>
+                          </div>
+
+                          <div class="form-group">
+                            <label {% if lang.default %} 
+                                class="form-label" 
+                                {% else %} 
+                                class="form-label" 
+                                {% endif %}>
+                                Теги
+                            </label>
+                            <br>
+                            <input type="text" name="tags#{{ lang.code }}" class="form-control"
+                            value="{% field_value field='tags' lang=lang %}">
+                          </div>
+                      </div>
+                  {% endfor %}
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="col-12 col-xl-4">
+      <div class="card mt-3">
+          <div class="card-body p-4">
+              <div class="form-group mb-4">
+                  <label class="form-label required">
+                      YouTube URL
+                  </label>
+                  <input type="url" name="youtube_url" class="form-control" required
+                         value="{{ object.youtube_url }}">
+                  <div class="invalid-feedback" style="display: block;">
+                      {% if errors.youtube_url %}
+                      {{ errors.youtube_url|list_item:0 }}
+                      {% endif %}
+                  </div>
+              </div>
+
+              <div class="form-check form-switch">
+                  <input type="checkbox" name="active" class="form-check-input" 
+                          id="id_active" 
+                          {% if object.active or not object %} checked {% endif %}>
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Active</label>
+              </div>
+              <br>
+
+              <div class="btn-box text-end">
+                  <a href="{% url 'videos_list' %}" class="btn w-30 btn-secondary">
+                      Отменить
+                  </a>
+                  <input type="submit" class="btn w-40 btn-primary" value="Сохранить">
+              </div>
+          </div>
+      </div>
+  </div>
+</form>
+<script src="{% static 'assets/js/editor.js' %}"></script>
+{% endblock %}

@@ -5,7 +5,7 @@ from .controllers import (
     translations, ProductController,
     CategoryController, BannerController,
     SliderContoller, MediaController,
-    ApplicationController, NewsController
+    ApplicationController, NewsController, VideosController, AudiosController, BooksController
 )
 from .controllers import LangsController
 from admins.controllers.NewsController import news_router
@@ -73,3 +73,6 @@ urlpatterns += SliderContoller.slider_router.paths
 urlpatterns += MediaController.media_router.paths
 urlpatterns += ApplicationController.application_router.paths
 urlpatterns += NewsController.news_router.paths
+urlpatterns += VideosController.videos_router.paths
+urlpatterns += AudiosController.audios_router.paths
+urlpatterns += BooksController.books_router.paths

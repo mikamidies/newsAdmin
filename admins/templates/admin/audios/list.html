@@ -1,0 +1,120 @@
+{% extends 'admin/base_template.html' %}
+{% load static %}
+{% load get_item %}
+{% load cut_text %}
+
+{% block title %} Аудио {% endblock %}
+{% block page_title %} Аудио {% endblock %}
+
+{% block page_btn %}
+<div class="col-auto">
+    <a href="{% url 'audios_create' %}" class="btn btn-primary ms-2">
+        Добавить
+    </a>
+</div>
+{% endblock %}
+
+{% block nav_ol %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Главная</a></li>
+    <li class="breadcrumb-item active" aria-current="&quot;page&quot;">
+      Аудио
+    </li>
+</ol>
+{% endblock %}
+
+{% block content_width %} class="col-12" {% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <!-- Form -->
+            <form method="get">
+                <div class="d-flex">
+                    <div class="input-group input-group-flush input-group-merge input-group-reverse"
+                        style="width: 200px;">
+                        <input class="form-control" name="q" type="search" placeholder="Search"
+                        {% if request.GET.q %} value="{{ request.GET.q }}" {% endif %}>
+                        <span class="input-group-text">
+                            <i class="fe fe-search"></i>
+                        </span>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Искать</button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
+
+    <div class="table-responsive" style="padding: 20px;">
+        <table class="table table-sm table-hover table-nowrap card-table">
+            <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col">Заголовок</th>
+                    <th scope="col">Файл</th>
+                    <th scope="col">Дата создания</th>
+                    <th scope="col">Статус</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj, i in objects.pairs %}
+                <tr>
+                    <td>
+                        <a class="item-title" href="{% url 'audios_edit' obj.id %}">{{ i }}</a>
+                    </td>
+                    <td>
+                        <p class="item-phone text-reset">
+                            {{ obj.title|get_item:lang.code }}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="item-phone text-reset">
+                            {% if obj.audio %}
+                                {{ obj.audio.name }}
+                            {% else %}
+                                Нет файла
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="item-phone text-reset">
+                            {{ obj.created_at|date:"Y-m-d" }}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="item-phone text-reset">
+                            {% if obj.active %}
+                                <span class="badge bg-success">Активный</span>
+                            {% else %}
+                                <span class="badge bg-danger">Неактивный</span>
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-end">
+                            <a href="{% url 'audios_edit' obj.id %}" class="btn btn-sm btn-info"><i
+                                    class="fe fe-edit-2"></i></a>
+                            <a class="btn btn-sm btn-danger ms-3"
+                                onclick="var result = confirm('Want to delete?');if (result){form_submit_in_table('delete-form{{ obj.id }}')}"><i
+                                    class="fe fe-trash"></i></a>
+                            <form action="{% url 'audios_delete' obj.id %}" 
+                                id="delete-form{{ obj.id }}" method="POST"
+                                style="display: none;">
+                                {% csrf_token %} 
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      {% include "../tags/pagination.html" %}
+    </div>
+</div>
+{% endblock %}
