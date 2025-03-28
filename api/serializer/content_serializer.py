@@ -56,7 +56,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
         model = Application
         exclude = ["status"]
 
-class NewsSerializer(serializers.ModelSerializer):
+class NewsSerializer(BaseModelSerializer):
     image = ThumbnailSerializer(alias="1100x1100")
 
     class Meta:

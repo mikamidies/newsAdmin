@@ -30,7 +30,7 @@ class StaticInformationView(RetrieveAPIView):
         default_lang = Languages.objects.filter(default=True).first()
         default_code = default_lang.code if default_lang else 'ru'
         
-        lang_code = self.request.headers.get('Accept-Language', default_code).lower()
+        lang_code = self.request.headers.get('Language', default_code).lower()
         language = Languages.objects.filter(code__iexact=lang_code, active=True).first()
         
         return language.code if language else default_code
