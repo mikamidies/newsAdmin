@@ -115,6 +115,10 @@ class NewsList(generics.ListCreateAPIView):
     serializer_class = NewsSerializer
     parser_classes = (MultiPartParser, FormParser)
 
+    def get_serializer(self, *args, **kwargs):
+        kwargs['remove_others'] = True  # Удаляем поле others
+        return super().get_serializer(*args, **kwargs)
+
     def perform_create(self, serializer):
         if 'image' in self.request.FILES:
             serializer.save(image=self.request.FILES['image'])
@@ -125,6 +129,10 @@ class VideosListView(generics.ListAPIView):
     queryset = Videos.objects.filter(active=True)
     serializer_class = VideosSerializer
 
+    def get_serializer(self, *args, **kwargs):
+        kwargs['remove_others'] = True
+        return super().get_serializer(*args, **kwargs)
+
 class AudiosListView(generics.ListAPIView):
     queryset = Audios.objects.filter(active=True)
     serializer_class = AudiosSerializer
@@ -134,8 +142,47 @@ class BooksListView(generics.ListCreateAPIView):
     serializer_class = BooksSerializer
     parser_classes = (MultiPartParser, FormParser)
 
+    def get_serializer(self, *args, **kwargs):
+        kwargs['remove_others'] = True
+        return super().get_serializer(*args, **kwargs)
+
     def perform_create(self, serializer):
         if 'image' in self.request.FILES:
             serializer.save(image=self.request.FILES['image'])
         else:
             serializer.save()
+
+class NewsDetailView(generics.RetrieveAPIView):
+    queryset = News.objects.filter(active=True)
+    serializer_class = NewsSerializer
+    lookup_field = 'slug'
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.views += 1  # Увеличиваем количество просмотров
+        instance.save(update_fields=['views'])  # Сохраняем только поле views
+        return super().retrieve(request, *args, **kwargs)
+
+
+class VideosDetailView(generics.RetrieveAPIView):
+    queryset = Videos.objects.filter(active=True)
+    serializer_class = VideosSerializer
+    lookup_field = 'slug'
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.views += 1  # Увеличиваем количество просмотров
+        instance.save(update_fields=['views'])  # Сохраняем только поле views
+        return super().retrieve(request, *args, **kwargs)
+
+
+class BooksDetailView(generics.RetrieveAPIView):
+    queryset = Books.objects.filter(active=True)
+    serializer_class = BooksSerializer
+    lookup_field = 'slug'
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.views += 1  # Увеличиваем количество просмотров
+        instance.save(update_fields=['views'])  # Сохраняем только поле views
+        return super().retrieve(request, *args, **kwargs)

@@ -27,7 +27,30 @@
   <input type="hidden" name="url" value="{{ request.get_full_path }}">
   <div class="col-12 col-xl-8">
       <!-- ...existing language tabs code... -->
+      
       <div class="card p-5 bg-white">
+        <div class="crd-header mb-5">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                {% for lang in langs %}
+                {% if lang == langs.first %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link px-3 py-2 active" id="tab_{{ lang.id }}" 
+                        data-bs-toggle="tab"
+                        data-bs-target="#{{ lang.code }}" type="button" role="tab" 
+                        aria-controls="{{ lang.code }}"
+                        aria-selected="true">{{ lang.name }}</button>
+                </li>
+                {% else %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link px-3 py-2" id="tab_{{ lang.id }}" data-bs-toggle="tab"
+                        data-bs-target="#{{ lang.code }}" type="button" role="tab" 
+                        aria-controls="{{ lang.code }}"
+                        aria-selected="false">{{ lang.name }}</button>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
           <div class="tab-content" id="myTabContent">
               {% for lang in langs %}
               {% if lang == langs.first %}

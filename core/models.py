@@ -131,15 +131,15 @@ class BaseModel(models.Model):
             slug_fields = self.slug_fields
 
             for field in slug_fields:
-                add_str = data_dict.get(field, '')
+                value = data_dict.get(field, '')
 
-                if add_str is None:
-                    add_str = ''
+                if value is None:
+                    value = ''
 
-                if add_str is dict:
-                    add_str = add_str.get(lng.code, '')
+                if isinstance(value, dict):
+                    value = value.get(lng.code, '')
 
-                slug_string += add_str
+                slug_string += value
 
                 if (len(slug_fields) > 1 and
                         slug_fields.index(field) != len(slug_fields)):

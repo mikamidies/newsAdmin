@@ -6,7 +6,6 @@ from easy_thumbnails.templatetags.thumbnail import get_thumbnailer
 from django.core.cache import cache
 
 
-# image serializer
 class ThumbnailSerializer(serializers.BaseSerializer):
     def __init__(self, alias, instance=None, **kwargs):
         super().__init__(instance, **kwargs)

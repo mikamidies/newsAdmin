@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-
+from .views import NewsDetailView, VideosDetailView, BooksDetailView
 
 urlpatterns = [
     path("translations", views.TranslationsView.as_view()),
@@ -15,4 +15,7 @@ urlpatterns = [
     path("audios", views.AudiosListView.as_view()),
     path("books", views.BooksListView.as_view()),
     path('static/', views.StaticInformationView.as_view(), name='api-static'),
+    path('news/<slug:slug>/', NewsDetailView.as_view(), name='news-detail'),
+    path('videos/<slug:slug>/', VideosDetailView.as_view(), name='videos-detail'),
+    path('books/<slug:slug>/', BooksDetailView.as_view(), name='books-detail'),
 ]
